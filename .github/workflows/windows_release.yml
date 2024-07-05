@@ -55,7 +55,7 @@ jobs:
           7z x jom.zip -ojom
 
       - name: (5) Create build directory
-        run: mkdir ${{ runner.temp }}/build
+        run: mkdir ${{ runner.temp }}\build
 
       - name: (6) Setup Visual Studio shell
         uses: egor-tensin/vs-shell@v2
@@ -63,7 +63,7 @@ jobs:
           arch: x64
 
       - name: (7) Build
-        working-directory: ${{ runner.temp }}/build
+        working-directory: ${{ runner.temp }}\build
         run: |
           qmake -r ${{ env.SOURCE_DIR }}\planets-qml.pro
           ${{ runner.temp }}/jom/jom -j2
