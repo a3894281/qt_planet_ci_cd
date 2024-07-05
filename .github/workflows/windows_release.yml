@@ -80,7 +80,7 @@ jobs:
           7z a qt-planets-build.zip ${{ runner.temp }}\build\* -r
 
       - name: (9) Save build artifact
-        uses: actions/upload-artiface@master
+        uses: actions/upload-artifact@master
         with:
             name: ${{ env.ARTIFACT }}
             path: ${{ runner.temp }}\${{ env.ARTIFACT }}
