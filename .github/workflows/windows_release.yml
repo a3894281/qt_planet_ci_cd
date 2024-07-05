@@ -2,9 +2,6 @@ name: windows_release
 
 on:
   push:
-    branches:
-      - 'master'
-      - 'continuous-integration'
     tags:
       - 'v*'
 

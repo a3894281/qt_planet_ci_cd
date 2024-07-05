@@ -1,0 +1,34 @@
+name: package_source_code
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create sourcecode.zip
+        run: |
+          zip -r sourcecode.zip ${{ github.workspace }}
+
+      - name: Create sourcecode.tar.gz
+        run: |
+          tar -czvf sourcecode.tar.gz -C ${{ github.workspace }} .
+
+      - name: Upload sourcecode.zip
+        uses: actions/upload-artifact@master
+        with:
+          name: sourcecode.zip
+          path: sourcecode.zip
+
+      - name: Upload sourcecode.tar.gz
+        uses: actions/upload-artifact@master
+        with:
+          name: sourcecode.tar.gz
+          path: sourcecode.tar.gz
