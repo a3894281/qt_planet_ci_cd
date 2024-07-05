@@ -28,6 +28,7 @@ jobs:
         working-directory:  ${{ github.workspace }}
         run: |
           git fetch --all --tags -f
+
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
@@ -48,8 +49,8 @@ jobs:
       - name: Unzip JOM
         working-directory: ${{ runner.temp }}
         run:  |
-              7z x jom.zip -ojom
-              
+          7z x jom.zip -ojom
+
       - name: Create build directory
         run:  mkdir ${{ runner.temp }}\build
 
@@ -61,23 +62,39 @@ jobs:
       - name: Build
         working-directory: ${{ runner.temp }}\build
         run:  |
-              qmake -r ${{ env.SOURCE_DIR }}\planets-qml.pro
-              ${{ runner.temp }}\jom\jom -j2
-              cd release
-              windeployqt --qmldir ${{ env.SOURCE_DIR }} planets-qml.exe --pdb --release --compiler-runtime
-              copy C:\Windows\System32\concrt140.dll . 
-              copy C:\Windows\System32\vccorlib140.dll .
-              copy C:\Windows\System32\msvcp140.dll .
-              copy C:\Windows\System32\vcruntime140.dll .
-              
+          qmake -r ${{ env.SOURCE_DIR }}\planets-qml.pro
+          ${{ runner.temp }}\jom\jom -j2
+          cd release
+          windeployqt --qmldir ${{ env.SOURCE_DIR }} planets-qml.exe --pdb --release --compiler-runtime
+          copy C:\Windows\System32\concrt140.dll . 
+          copy C:\Windows\System32\vccorlib140.dll .
+          copy C:\Windows\System32\msvcp140.dll .
+          copy C:\Windows\System32\vcruntime140.dll .
+
       - name: Zip build
         working-directory: ${{ runner.temp }}
         run:  |
-              7z a qt-planets-build.zip ${{ runner.temp }}\build\* -r
-              
+          7z a qt-planets-build.zip ${{ runner.temp }}\build\* -r
+
       - name: Save build artifact
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ env.ARTIFACT }}
           path: ${{ runner.temp }}\${{ env.ARTIFACT }}
-              
+
+  upload-tagged-artifact:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT }}
+          path: ${{ github.workspace }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACT }}
+          path: ${{ github.workspace }}/${{ env.ARTIFACT }}
