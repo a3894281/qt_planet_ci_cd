@@ -17,18 +17,8 @@ jobs:
         run: |
           zip -r sourcecode.zip ${{ github.workspace }}
 
-      - name: Create sourcecode.tar.gz
-        run: |
-          tar -czvf sourcecode.tar.gz -C ${{ github.workspace }} .
-
       - name: Upload sourcecode.zip
         uses: actions/upload-artifact@master
         with:
           name: sourcecode.zip
           path: sourcecode.zip
-
-      - name: Upload sourcecode.tar.gz
-        uses: actions/upload-artifact@master
-        with:
-          name: sourcecode.tar.gz
-          path: sourcecode.tar.gz
