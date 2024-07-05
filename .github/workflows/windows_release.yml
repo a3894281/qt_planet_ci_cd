@@ -5,11 +5,6 @@ on:
     tags:
       - 'v*'
 
-  pull_request:
-    branches:
-      - 'master'
-      - 'continuous-integration'
-
 defaults:
   run:
     shell: cmd
@@ -75,6 +70,7 @@ jobs:
         working-directory: ${{ runner.temp }}
         run: |
           7z a qt-planets-build.zip ${{ runner.temp }}\build\* -r
+          dir ${{ runner.temp }}
 
       - name: (9) Save build artifact
         uses: actions/upload-artifact@master
